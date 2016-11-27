@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionParser.cs" />
     <Compile Include="AndParser.cs" />
     <Compile Include="ChoiceParser.cs" />
     <Compile Include="EndParser.cs" />

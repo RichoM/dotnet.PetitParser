@@ -158,6 +158,30 @@ namespace PetitParser.Test
             Assert.AreEqual("foo", token.InputValue);
         }
 
+        [TestMethod]
+        public void TestActionParserWithOneArgument()
+        {
+            var pp = "foo".AsParser().Token()
+                .Map<Token, string>(token => token.InputValue.ToUpper());
+            Assert.AreEqual("FOO", pp.Parse<string>("foo"));
+        }
+
+        [TestMethod]
+        public void TestActionParserWithMultipleArguments()
+        {
+            var pp = "foo".AsParser().Token()
+                .Then("bar".AsParser().Token())
+                .Then("baz".AsParser().Token())
+                .Map<Token, Token, Token, string>((t1, t2, t3) =>
+                {
+                    return string.Format("{0} -> {1} -> {2}", 
+                        t1.InputValue, 
+                        t2.InputValue,
+                        t3.InputValue);
+                });
+            Assert.AreEqual("foo -> bar -> baz", pp.Parse<string>("foobarbaz"));
+        }
+        
         private void Throws<T>(Action action) where T : Exception
         {
             try
