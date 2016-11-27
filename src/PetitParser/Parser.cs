@@ -10,6 +10,36 @@ namespace PetitParser
 {
     public abstract class Parser
     {
+        public static Parser Predicate(Func<char, bool> predicate, string message)
+        {
+            return new PredicateParser(predicate, message);
+        }
+
+        public static Parser Any()
+        {
+            return Predicate(chr => true, "Input expected");
+        }
+
+        public static Parser Digit()
+        {
+            return Predicate(chr => char.IsDigit(chr), "Digit expected");
+        }
+
+        public static Parser Letter()
+        {
+            return Predicate(chr => char.IsLetter(chr), "Letter expected");
+        }
+
+        public static Parser Word()
+        {
+            return Predicate(chr => char.IsLetterOrDigit(chr), "Letter or digit expected");
+        }
+
+        public static Parser Space()
+        {
+            return Predicate(chr => char.IsWhiteSpace(chr), "Separator expected");
+        }
+
         public virtual T Parse<T>(string str)
         {
             return (T)Parse(str);
@@ -21,6 +51,11 @@ namespace PetitParser
         }
 
         public abstract ParseResult ParseOn(Stream stream);
+
+        public bool Matches(string str)
+        {
+            return ParseOn(str.ReadStream()).IsSuccess;
+        }
 
         public virtual Parser Then(Parser parser)
         {
@@ -75,6 +110,11 @@ namespace PetitParser
         public Parser Token()
         {
             return new TokenParser(this);
+        }
+
+        public virtual Parser CaseInsensitive()
+        {
+            return this;
         }
 
         public Parser Map<TArg, TResult>(Func<TArg, TResult> function)

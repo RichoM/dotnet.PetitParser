@@ -181,7 +181,41 @@ namespace PetitParser.Test
                 });
             Assert.AreEqual("foo -> bar -> baz", pp.Parse<string>("foobarbaz"));
         }
-        
+
+        [TestMethod]
+        public void TestPredicateParser()
+        {
+            var pp = Parser.Predicate(chr => "aeiouAEIOU".Contains(chr), "Vowel expected");
+            Assert.IsTrue(pp.Matches("a"));
+            Assert.IsFalse(pp.Matches("b"));
+        }
+
+        [TestMethod]
+        public void TestCaseInsensitiveAppliedDirectlyToTheLiteralParser()
+        {
+            var pp = "foo!".AsParser().CaseInsensitive().Flatten();
+            Assert.AreEqual("Foo!", pp.Parse<string>("Foo!"));
+            Assert.AreEqual("FOO!", pp.Parse<string>("FOO!"));
+            Assert.AreEqual("foo!", pp.Parse<string>("foo!"));
+        }
+
+        [TestMethod]
+        public void TestCaseInsensitiveAppliedAtTheTop()
+        {
+            var pp = ("foo".AsParser().Or("bar".AsParser())).Token()
+                .Then(Parser.Space().Plus())
+                .Then(Parser.Digit().Plus().Token())
+                .Then("!".AsParser().Optional())
+                .CaseInsensitive()
+                .Map<Token, object, Token, object, Tuple<string, int>>((word, ign1, num, ign2) =>
+                {
+                    return new Tuple<string, int>(word.InputValue, int.Parse(num.InputValue));
+                });
+            Assert.AreEqual(new Tuple<string, int>("Foo", 4), pp.Parse("Foo 4!"));
+            Assert.AreEqual(new Tuple<string, int>("BAR", 443), pp.Parse("BAR     443"));
+            Throws<ParseException>(() => pp.Parse("Baz 56"));
+        }
+
         private void Throws<T>(Action action) where T : Exception
         {
             try

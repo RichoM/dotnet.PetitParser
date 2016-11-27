@@ -18,6 +18,13 @@ namespace PetitParser
             this.literal = literal;
         }
 
+        public override Parser CaseInsensitive()
+        {
+            char lower = char.ToLowerInvariant(literal);
+            return Predicate(chr => lower == char.ToLowerInvariant(chr),
+                string.Format("Literal '{0}' expected", literal));
+        }
+
         public override ParseResult ParseOn(Stream stream)
         {
             if (stream.Peek() == literal)

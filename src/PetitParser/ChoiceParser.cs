@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using PetitParser.Results;
 using PetitParser.Utils;
@@ -9,7 +10,7 @@ namespace PetitParser
     {
         private List<Parser> parsers = new List<Parser>();
 
-        public ChoiceParser(Parser[] parsers)
+        public ChoiceParser(IEnumerable<Parser> parsers)
         {
             this.parsers.AddRange(parsers);
         }
@@ -18,6 +19,11 @@ namespace PetitParser
         {
             parsers.Add(parser);
             return this;
+        }
+
+        public override Parser CaseInsensitive()
+        {
+            return new ChoiceParser(parsers.Select(each => each.CaseInsensitive()));
         }
 
         public override ParseResult ParseOn(Stream stream)

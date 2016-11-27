@@ -13,6 +13,11 @@ namespace PetitParser
             this.parser = parser;
         }
 
+        public override Parser CaseInsensitive()
+        {
+            return new EndParser(parser.CaseInsensitive());
+        }
+
         public override ParseResult ParseOn(Stream stream)
         {
             int start = stream.Position;

@@ -18,6 +18,11 @@ namespace PetitParser
             this.max = max;
         }
 
+        public override Parser CaseInsensitive()
+        {
+            return new RepeatingParser(parser.CaseInsensitive(), min, max);
+        }
+
         public override ParseResult ParseOn(Stream stream)
         {
             int start = stream.Position;
