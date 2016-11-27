@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace PetitParser
 {
-    internal class RepeatingParser : Parser
+    class RepeatingParser : Parser
     {
         private int max;
         private Parser parser;

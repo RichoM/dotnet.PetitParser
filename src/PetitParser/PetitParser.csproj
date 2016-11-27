@@ -46,6 +46,8 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="FlattenParser.cs" />
     <Compile Include="LiteralObjectParser.cs" />
+    <Compile Include="NotParser.cs" />
+    <Compile Include="OptionalParser.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepeatingParser.cs" />
@@ -54,6 +56,8 @@
     <Compile Include="Results\ParseResult.cs" />
     <Compile Include="Results\ParseSuccess.cs" />
     <Compile Include="SequenceParser.cs" />
+    <Compile Include="Token.cs" />
+    <Compile Include="TokenParser.cs" />
     <Compile Include="Utils\Stream.cs" />
     <Compile Include="Utils\StreamExtensions.cs" />
   </ItemGroup>

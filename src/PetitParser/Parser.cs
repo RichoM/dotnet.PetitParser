@@ -61,5 +61,20 @@ namespace PetitParser
         {
             return new RepeatingParser(this, times, times);
         }
+
+        public Parser Not()
+        {
+            return new NotParser(this);
+        }
+
+        public Parser Optional()
+        {
+            return new OptionalParser(this);
+        }
+
+        public Parser Token()
+        {
+            return new TokenParser(this);
+        }
     }
 }

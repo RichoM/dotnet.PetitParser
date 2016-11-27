@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace PetitParser
 {
-    internal class SequenceParser : Parser
+    class SequenceParser : Parser
     {
         private List<Parser> parsers = new List<Parser>();
 

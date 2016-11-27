@@ -4,11 +4,11 @@ using PetitParser.Utils;
 
 namespace PetitParser
 {
-    class EndParser : Parser
+    internal class TokenParser : Parser
     {
         private Parser parser;
 
-        public EndParser(Parser parser)
+        public TokenParser(Parser parser)
         {
             this.parser = parser;
         }
@@ -17,10 +17,9 @@ namespace PetitParser
         {
             int start = stream.Position;
             ParseResult result = parser.ParseOn(stream);
-            if (result.IsFailure || stream.AtEnd) return result;
-            result = new ParseFailure(stream.Position, "End of input expected");
-            stream.Position = start;
-            return result;
+            if (result.IsFailure) return result;
+            Token token = new Token(stream.Source, start, stream.Position - start, result.ActualResult);
+            return new ParseSuccess(token);
         }
     }
 }

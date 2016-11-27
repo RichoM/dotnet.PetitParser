@@ -127,6 +127,37 @@ namespace PetitParser.Test
             Throws<ParseException>(() => pp.Parse("foofoo"));
         }
 
+        [TestMethod]
+        public void TestNotParser()
+        {
+            var pp = 'a'.AsParser().Not();
+            Stream stream = "b".ReadStream();
+            Assert.IsNull(pp.ParseOn(stream).ActualResult);
+            Assert.AreEqual(0, stream.Position);
+            Throws<ParseException>(() => pp.Parse("a"));
+        }
+
+        [TestMethod]
+        public void TestOptionalParser()
+        {
+            var pp = "foo".AsParser().Flatten().Optional();
+            Assert.AreEqual("foo", pp.Parse("foo"));
+            Assert.IsNull(pp.Parse("bar"));
+        }
+
+        [TestMethod]
+        public void TestTokenParser()
+        {
+            var pp = "foo".AsParser().Token();
+            Token token = pp.Parse<Token>("foo");
+            Assert.AreEqual(0, token.Start);
+            Assert.AreEqual(3, token.Length);
+            CollectionAssert.AreEqual(
+                new char[] { 'f', 'o', 'o' },
+                (object[])token.ParsedValue);
+            Assert.AreEqual("foo", token.InputValue);
+        }
+
         private void Throws<T>(Action action) where T : Exception
         {
             try
