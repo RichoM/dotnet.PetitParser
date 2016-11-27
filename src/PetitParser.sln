@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetitParser", "PetitParser\PetitParser.csproj", "{D279072F-8903-45CB-99DF-D2BF88B714AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetitParser.Test", "PetitParser.Test\PetitParser.Test.csproj", "{6F33C557-0AE6-4669-AEB1-ACF90F519550}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D279072F-8903-45CB-99DF-D2BF88B714AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D279072F-8903-45CB-99DF-D2BF88B714AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D279072F-8903-45CB-99DF-D2BF88B714AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D279072F-8903-45CB-99DF-D2BF88B714AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F33C557-0AE6-4669-AEB1-ACF90F519550}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F33C557-0AE6-4669-AEB1-ACF90F519550}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F33C557-0AE6-4669-AEB1-ACF90F519550}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F33C557-0AE6-4669-AEB1-ACF90F519550}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
