@@ -172,6 +172,7 @@ namespace PetitParser.Test
             var pp = "foo".AsParser().Token()
                 .Then("bar".AsParser().Token())
                 .Then("baz".AsParser().Token())
+                .End()
                 .Map<Token, Token, Token, string>((t1, t2, t3) =>
                 {
                     return string.Format("{0} -> {1} -> {2}", 
@@ -191,7 +192,7 @@ namespace PetitParser.Test
         }
 
         [TestMethod]
-        public void TestCaseInsensitiveAppliedDirectlyToTheLiteralParser()
+        public void TestCaseInsensitiveAppliedDirectlyToLiteralParser()
         {
             var pp = "foo!".AsParser().CaseInsensitive().Flatten();
             Assert.AreEqual("Foo!", pp.Parse<string>("Foo!"));
@@ -202,18 +203,70 @@ namespace PetitParser.Test
         [TestMethod]
         public void TestCaseInsensitiveAppliedAtTheTop()
         {
-            var pp = ("foo".AsParser().Or("bar".AsParser())).Token()
+            var pp = ("foo".AsParser().Or("bar".AsParser())).Flatten()
                 .Then(Parser.Space().Plus())
-                .Then(Parser.Digit().Plus().Token())
+                .Then(Parser.Digit().Plus().Flatten())
                 .Then("!".AsParser().Optional())
                 .CaseInsensitive()
-                .Map<Token, object, Token, object, Tuple<string, int>>((word, ign1, num, ign2) =>
+                .Map<string, object, string, object, Tuple<string, int>>((word, ign1, num, ign2) =>
                 {
-                    return new Tuple<string, int>(word.InputValue, int.Parse(num.InputValue));
+                    return new Tuple<string, int>(word, int.Parse(num));
                 });
             Assert.AreEqual(new Tuple<string, int>("Foo", 4), pp.Parse("Foo 4!"));
             Assert.AreEqual(new Tuple<string, int>("BAR", 443), pp.Parse("BAR     443"));
             Throws<ParseException>(() => pp.Parse("Baz 56"));
+        }
+
+        [TestMethod]
+        public void TestGreedyRepeatingParserPlus()
+        {
+            var pp = Parser.Word().PlusGreedy("upper".AsParser().Or("lower".AsParser()).CaseInsensitive()).Flatten()
+                .Then("upper".AsParser().Or("lower".AsParser()).CaseInsensitive().Flatten())
+                .End()
+                .Map<string, string, string>((word, @case) =>
+                {
+                    if ("lower".Equals(@case, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return word.ToLower();
+                    }
+                    else if ("upper".Equals(@case, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return word.ToUpper();
+                    }
+                    else
+                    {
+                        return "WAT";
+                    }
+                });
+            Assert.AreEqual("abcupperlowerupper", pp.Parse("abcupperLowerUPPERlower"));
+            Assert.AreEqual("ABC", pp.Parse("abcupper"));
+            Throws<ParseException>(() => pp.Parse("upper"));
+        }
+
+        [TestMethod]
+        public void TestGreedyRepeatingParserStar()
+        {
+            var pp = Parser.Word().StarGreedy("upper".AsParser().Or("lower".AsParser()).CaseInsensitive()).Flatten()
+                .Then("upper".AsParser().Or("lower".AsParser()).CaseInsensitive().Flatten())
+                .End()
+                .Map<string, string, string>((word, @case) =>
+                {
+                    if ("lower".Equals(@case, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return word.ToLower();
+                    }
+                    else if ("upper".Equals(@case, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return word.ToUpper();
+                    }
+                    else
+                    {
+                        return "WAT";
+                    }
+                });
+            Assert.AreEqual("abcupperlowerupper", pp.Parse("abcupperLowerUPPERlower"));
+            Assert.AreEqual("ABC", pp.Parse("abcupper"));
+            Assert.AreEqual("", pp.Parse("upper"));
         }
 
         private void Throws<T>(Action action) where T : Exception

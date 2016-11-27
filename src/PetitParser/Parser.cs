@@ -37,7 +37,7 @@ namespace PetitParser
 
         public static Parser Space()
         {
-            return Predicate(chr => char.IsWhiteSpace(chr), "Separator expected");
+            return Predicate(chr => char.IsWhiteSpace(chr), "White space expected");
         }
 
         public virtual T Parse<T>(string str)
@@ -95,6 +95,16 @@ namespace PetitParser
         public Parser Times(int times)
         {
             return new RepeatingParser(this, times, times);
+        }
+
+        public Parser StarGreedy(Parser parser)
+        {
+            return new GreedyRepeatingParser(this, 0, int.MaxValue, parser);
+        }
+
+        public Parser PlusGreedy(Parser parser)
+        {
+            return new GreedyRepeatingParser(this, 1, int.MaxValue, parser);
         }
 
         public Parser Not()

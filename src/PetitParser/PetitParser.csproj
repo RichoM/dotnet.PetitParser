@@ -46,6 +46,7 @@
     <Compile Include="EndParser.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FlattenParser.cs" />
+    <Compile Include="GreedyRepeatingParser.cs" />
     <Compile Include="LiteralObjectParser.cs" />
     <Compile Include="NotParser.cs" />
     <Compile Include="OptionalParser.cs" />
