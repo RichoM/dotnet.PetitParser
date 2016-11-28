@@ -13,9 +13,9 @@ namespace PetitParser
             this.parser = parser;
         }
 
-        public override Parser CaseInsensitive()
+        public override Parser CaseInsensitive
         {
-            return new AndParser(parser.CaseInsensitive());
+            get { return new AndParser(parser.CaseInsensitive); }
         }
 
         public override ParseResult ParseOn(Stream stream)

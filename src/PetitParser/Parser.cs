@@ -15,29 +15,29 @@ namespace PetitParser
             return new PredicateParser(predicate, message);
         }
 
-        public static Parser Any()
+        public static Parser Any
         {
-            return Predicate(chr => true, "Input expected");
+            get { return Predicate(chr => true, "Input expected"); }
         }
 
-        public static Parser Digit()
+        public static Parser Digit
         {
-            return Predicate(chr => char.IsDigit(chr), "Digit expected");
+            get { return Predicate(chr => char.IsDigit(chr), "Digit expected"); }
         }
 
-        public static Parser Letter()
+        public static Parser Letter
         {
-            return Predicate(chr => char.IsLetter(chr), "Letter expected");
+            get { return Predicate(chr => char.IsLetter(chr), "Letter expected"); }
         }
 
-        public static Parser Word()
+        public static Parser Word
         {
-            return Predicate(chr => char.IsLetterOrDigit(chr), "Letter or digit expected");
+            get { return Predicate(chr => char.IsLetterOrDigit(chr), "Letter or digit expected"); }
         }
 
-        public static Parser Space()
+        public static Parser Space
         {
-            return Predicate(chr => char.IsWhiteSpace(chr), "White space expected");
+            get { return Predicate(chr => char.IsWhiteSpace(chr), "White space expected"); }
         }
 
         public virtual T Parse<T>(string str)
@@ -67,29 +67,29 @@ namespace PetitParser
             return new ChoiceParser(new Parser[] { this, parser });
         }
 
-        public virtual Parser And()
+        public Parser And
         {
-            return new AndParser(this);
+            get { return new AndParser(this); }
         }
 
-        public Parser Flatten()
+        public Parser Flatten
         {
-            return new FlattenParser(this);
+            get { return new FlattenParser(this); }
         }
 
-        public Parser End()
+        public Parser End
         {
-            return new EndParser(this);
+            get { return new EndParser(this); }
         }
 
-        public Parser Star()
+        public Parser Star
         {
-            return new RepeatingParser(this, 0, int.MaxValue);
+            get { return new RepeatingParser(this, 0, int.MaxValue); }
         }
 
-        public Parser Plus()
+        public Parser Plus
         {
-            return new RepeatingParser(this, 1, int.MaxValue);
+            get { return new RepeatingParser(this, 1, int.MaxValue); }
         }
 
         public Parser Times(int times)
@@ -107,24 +107,24 @@ namespace PetitParser
             return new GreedyRepeatingParser(this, 1, int.MaxValue, parser);
         }
 
-        public Parser Not()
+        public Parser Not
         {
-            return new NotParser(this);
+            get { return new NotParser(this); }
         }
 
-        public Parser Optional()
+        public Parser Optional
         {
-            return new OptionalParser(this);
+            get { return new OptionalParser(this); }
         }
 
-        public Parser Token()
+        public Parser Token
         {
-            return new TokenParser(this);
+            get { return new TokenParser(this); }
         }
 
-        public virtual Parser CaseInsensitive()
+        public virtual Parser CaseInsensitive
         {
-            return this;
+            get { return this; }
         }
 
         public Parser Map<TArg, TResult>(Func<TArg, TResult> function)

@@ -52,15 +52,15 @@ namespace PetitParser.Test
         [TestMethod]
         public void TestFlattenParser()
         {
-            var pp = "perro".AsParser().Flatten();
+            var pp = "perro".AsParser().Flatten;
             Assert.AreEqual("perro", pp.Parse("perro"));
         }
 
         [TestMethod]
         public void TestAndParser()
         {
-            var pp = "foo".AsParser().Flatten()
-                .Then("bar".AsParser().Flatten().And());
+            var pp = "foo".AsParser().Flatten
+                .Then("bar".AsParser().Flatten.And);
             Stream stream = "foobar".ReadStream();
             ParseResult result = pp.ParseOn(stream);
             string[] actual = ((object[])result.ActualResult)
@@ -75,7 +75,7 @@ namespace PetitParser.Test
         [TestMethod]
         public void TestEndParser()
         {
-            var pp = "foo".AsParser().Flatten().End();
+            var pp = "foo".AsParser().Flatten.End;
             Assert.AreEqual("foo", pp.Parse("foo"));
             Throws<ParseException>(() => pp.Parse("foobar"));
         }
@@ -83,7 +83,7 @@ namespace PetitParser.Test
         [TestMethod]
         public void TestRepeatingParserStar()
         {
-            var pp = "foo".AsParser().Flatten().Star();
+            var pp = "foo".AsParser().Flatten.Star;
             string[] actual = pp.Parse<object[]>("foofoofoo").Cast<string>().ToArray();
             string[] expected = new string[] { "foo", "foo", "foo" };
             CollectionAssert.AreEqual(expected, actual);
@@ -92,7 +92,7 @@ namespace PetitParser.Test
         [TestMethod]
         public void TestRepeatingParserStarNoElement()
         {
-            var pp = "foo".AsParser().Flatten().Star();
+            var pp = "foo".AsParser().Flatten.Star;
             string[] actual = pp.Parse<object[]>("").Cast<string>().ToArray();
             string[] expected = new string[0];
             CollectionAssert.AreEqual(expected, actual);
@@ -101,7 +101,7 @@ namespace PetitParser.Test
         [TestMethod]
         public void TestRepeatingParserPlus()
         {
-            var pp = "foo".AsParser().Flatten().Plus();
+            var pp = "foo".AsParser().Flatten.Plus;
             string[] actual = pp.Parse<object[]>("foofoofoo").Cast<string>().ToArray();
             string[] expected = new string[] { "foo", "foo", "foo" };
             CollectionAssert.AreEqual(expected, actual);
@@ -110,7 +110,7 @@ namespace PetitParser.Test
         [TestMethod]
         public void TestRepeatingParserPlusNoElement()
         {
-            var pp = "foo".AsParser().Flatten().Plus();
+            var pp = "foo".AsParser().Flatten.Plus;
             string[] actual = pp.Parse<object[]>("foofoofoo").Cast<string>().ToArray();
             string[] expected = new string[] { "foo", "foo", "foo" };
             CollectionAssert.AreEqual(expected, actual);
@@ -120,7 +120,7 @@ namespace PetitParser.Test
         [TestMethod]
         public void TestRepeatingParserTimes()
         {
-            var pp = "foo".AsParser().Flatten().Times(3);
+            var pp = "foo".AsParser().Flatten.Times(3);
             string[] actual = pp.Parse<object[]>("foofoofoo").Cast<string>().ToArray();
             string[] expected = new string[] { "foo", "foo", "foo" };
             CollectionAssert.AreEqual(expected, actual);
@@ -130,7 +130,7 @@ namespace PetitParser.Test
         [TestMethod]
         public void TestNotParser()
         {
-            var pp = 'a'.AsParser().Not();
+            var pp = 'a'.AsParser().Not;
             Stream stream = "b".ReadStream();
             Assert.IsNull(pp.ParseOn(stream).ActualResult);
             Assert.AreEqual(0, stream.Position);
@@ -140,7 +140,7 @@ namespace PetitParser.Test
         [TestMethod]
         public void TestOptionalParser()
         {
-            var pp = "foo".AsParser().Flatten().Optional();
+            var pp = "foo".AsParser().Flatten.Optional;
             Assert.AreEqual("foo", pp.Parse("foo"));
             Assert.IsNull(pp.Parse("bar"));
         }
@@ -148,7 +148,7 @@ namespace PetitParser.Test
         [TestMethod]
         public void TestTokenParser()
         {
-            var pp = "foo".AsParser().Token();
+            var pp = "foo".AsParser().Token;
             Token token = pp.Parse<Token>("foo");
             Assert.AreEqual(0, token.Start);
             Assert.AreEqual(3, token.Length);
@@ -161,7 +161,7 @@ namespace PetitParser.Test
         [TestMethod]
         public void TestActionParserWithOneArgument()
         {
-            var pp = "foo".AsParser().Token()
+            var pp = "foo".AsParser().Token
                 .Map<Token, string>(token => token.InputValue.ToUpper());
             Assert.AreEqual("FOO", pp.Parse<string>("foo"));
         }
@@ -169,10 +169,10 @@ namespace PetitParser.Test
         [TestMethod]
         public void TestActionParserWithMultipleArguments()
         {
-            var pp = "foo".AsParser().Token()
-                .Then("bar".AsParser().Token())
-                .Then("baz".AsParser().Token())
-                .End()
+            var pp = "foo".AsParser().Token
+                .Then("bar".AsParser().Token)
+                .Then("baz".AsParser().Token)
+                .End
                 .Map<Token, Token, Token, string>((t1, t2, t3) =>
                 {
                     return string.Format("{0} -> {1} -> {2}", 
@@ -194,7 +194,7 @@ namespace PetitParser.Test
         [TestMethod]
         public void TestCaseInsensitiveAppliedDirectlyToLiteralParser()
         {
-            var pp = "foo!".AsParser().CaseInsensitive().Flatten();
+            var pp = "foo!".AsParser().CaseInsensitive.Flatten;
             Assert.AreEqual("Foo!", pp.Parse<string>("Foo!"));
             Assert.AreEqual("FOO!", pp.Parse<string>("FOO!"));
             Assert.AreEqual("foo!", pp.Parse<string>("foo!"));
@@ -203,11 +203,11 @@ namespace PetitParser.Test
         [TestMethod]
         public void TestCaseInsensitiveAppliedAtTheTop()
         {
-            var pp = ("foo".AsParser().Or("bar".AsParser())).Flatten()
-                .Then(Parser.Space().Plus())
-                .Then(Parser.Digit().Plus().Flatten())
-                .Then("!".AsParser().Optional())
-                .CaseInsensitive()
+            var pp = ("foo".AsParser().Or("bar".AsParser())).Flatten
+                .Then(Parser.Space.Plus)
+                .Then(Parser.Digit.Plus.Flatten)
+                .Then("!".AsParser().Optional)
+                .CaseInsensitive
                 .Map<string, object, string, object, Tuple<string, int>>((word, ign1, num, ign2) =>
                 {
                     return new Tuple<string, int>(word, int.Parse(num));
@@ -220,9 +220,9 @@ namespace PetitParser.Test
         [TestMethod]
         public void TestGreedyRepeatingParserPlus()
         {
-            var pp = Parser.Word().PlusGreedy("upper".AsParser().Or("lower".AsParser()).CaseInsensitive()).Flatten()
-                .Then("upper".AsParser().Or("lower".AsParser()).CaseInsensitive().Flatten())
-                .End()
+            var pp = Parser.Word.PlusGreedy("upper".AsParser().Or("lower".AsParser()).CaseInsensitive).Flatten
+                .Then("upper".AsParser().Or("lower".AsParser()).CaseInsensitive.Flatten)
+                .End
                 .Map<string, string, string>((word, @case) =>
                 {
                     if ("lower".Equals(@case, StringComparison.OrdinalIgnoreCase))
@@ -246,9 +246,9 @@ namespace PetitParser.Test
         [TestMethod]
         public void TestGreedyRepeatingParserStar()
         {
-            var pp = Parser.Word().StarGreedy("upper".AsParser().Or("lower".AsParser()).CaseInsensitive()).Flatten()
-                .Then("upper".AsParser().Or("lower".AsParser()).CaseInsensitive().Flatten())
-                .End()
+            var pp = Parser.Word.StarGreedy("upper".AsParser().Or("lower".AsParser()).CaseInsensitive).Flatten
+                .Then("upper".AsParser().Or("lower".AsParser()).CaseInsensitive.Flatten)
+                .End
                 .Map<string, string, string>((word, @case) =>
                 {
                     if ("lower".Equals(@case, StringComparison.OrdinalIgnoreCase))

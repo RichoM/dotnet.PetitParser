@@ -18,9 +18,9 @@ namespace PetitParser
             this.max = max;
         }
 
-        public override Parser CaseInsensitive()
+        public override Parser CaseInsensitive
         {
-            return new RepeatingParser(parser.CaseInsensitive(), min, max);
+            get { return new RepeatingParser(parser.CaseInsensitive, min, max); }
         }
 
         public override ParseResult ParseOn(Stream stream)

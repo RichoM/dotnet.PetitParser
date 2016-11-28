@@ -21,9 +21,9 @@ namespace PetitParser
             return this;
         }
 
-        public override Parser CaseInsensitive()
+        public override Parser CaseInsensitive
         {
-            return new ChoiceParser(parsers.Select(each => each.CaseInsensitive()));
+            get { return new ChoiceParser(parsers.Select(each => each.CaseInsensitive)); }
         }
 
         public override ParseResult ParseOn(Stream stream)
