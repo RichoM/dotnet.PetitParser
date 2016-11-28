@@ -269,6 +269,60 @@ namespace PetitParser.Test
             Assert.AreEqual("", pp.Parse("upper"));
         }
 
+        [TestMethod]
+        public void TestLazyRepeatingParserPlus()
+        {
+            var pp = Parser.Any.PlusLazy("upper".AsParser().Or("lower".AsParser()).CaseInsensitive).Flatten
+                .Then("upper".AsParser().Or("lower".AsParser()).CaseInsensitive.Flatten)
+                .End
+                .Map<string, string, string>((word, @case) =>
+                {
+                    if ("lower".Equals(@case, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return word.ToLower();
+                    }
+                    else if ("upper".Equals(@case, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return word.ToUpper();
+                    }
+                    else
+                    {
+                        return "WAT";
+                    }
+                });
+            Assert.AreEqual(" abc! ", pp.Parse(" abc! LOWER"));
+            Assert.AreEqual("ABC", pp.Parse("abcupper"));
+            Throws<ParseException>(() => pp.Parse("upper"));
+            Throws<ParseException>(() => pp.Parse("abcupperLOWER"));
+        }
+
+        [TestMethod]
+        public void TestLazyRepeatingParserStar()
+        {
+            var pp = Parser.Any.StarLazy("upper".AsParser().Or("lower".AsParser()).CaseInsensitive).Flatten
+                .Then("upper".AsParser().Or("lower".AsParser()).CaseInsensitive.Flatten)
+                .End
+                .Map<string, string, string>((word, @case) =>
+                {
+                    if ("lower".Equals(@case, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return word.ToLower();
+                    }
+                    else if ("upper".Equals(@case, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return word.ToUpper();
+                    }
+                    else
+                    {
+                        return "WAT";
+                    }
+                });
+            Assert.AreEqual(" abc! ", pp.Parse(" abc! LOWER"));
+            Assert.AreEqual("ABC", pp.Parse("abcupper"));
+            Assert.AreEqual("", pp.Parse("upper"));
+            Throws<ParseException>(() => pp.Parse("abcupperlower"));
+        }
+
         private void Throws<T>(Action action) where T : Exception
         {
             try

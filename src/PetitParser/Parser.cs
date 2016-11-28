@@ -97,14 +97,24 @@ namespace PetitParser
             return new RepeatingParser(this, times, times);
         }
 
-        public Parser StarGreedy(Parser parser)
+        public Parser StarGreedy(Parser limit)
         {
-            return new GreedyRepeatingParser(this, 0, int.MaxValue, parser);
+            return new GreedyRepeatingParser(this, 0, int.MaxValue, limit);
         }
 
-        public Parser PlusGreedy(Parser parser)
+        public Parser PlusGreedy(Parser limit)
         {
-            return new GreedyRepeatingParser(this, 1, int.MaxValue, parser);
+            return new GreedyRepeatingParser(this, 1, int.MaxValue, limit);
+        }
+
+        public Parser StarLazy(Parser limit)
+        {
+            return new LazyRepeatingParser(this, 0, int.MaxValue, limit);
+        }
+
+        public Parser PlusLazy(Parser limit)
+        {
+            return new LazyRepeatingParser(this, 1, int.MaxValue, limit);
         }
 
         public Parser Not

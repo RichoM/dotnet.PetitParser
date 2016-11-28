@@ -23,7 +23,7 @@ namespace PetitParser
 
         public override Parser CaseInsensitive
         {
-            get { return new GreedyRepeatingParser(parser.CaseInsensitive, min, max, limit); }
+            get { return new GreedyRepeatingParser(parser.CaseInsensitive, min, max, limit.CaseInsensitive); }
         }
 
         public override ParseResult ParseOn(Stream stream)
