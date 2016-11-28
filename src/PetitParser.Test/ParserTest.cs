@@ -323,6 +323,16 @@ namespace PetitParser.Test
             Throws<ParseException>(() => pp.Parse("abcupperlower"));
         }
 
+        [TestMethod]
+        public void TestParserNegate()
+        {
+            var pp = Parser.Digit.Negate.Then(Parser.Digit);
+            Assert.IsTrue(pp.Matches("a2"));
+            Assert.IsTrue(pp.Matches("?2"));
+            Assert.IsFalse(pp.Matches("22"));
+            Assert.IsFalse(pp.Matches("2a"));
+        }
+
         private void Throws<T>(Action action) where T : Exception
         {
             try

@@ -137,6 +137,11 @@ namespace PetitParser
             get { return this; }
         }
 
+        public Parser Negate
+        {
+            get { return Not.Then(Any).Map(elements => elements[1]); }
+        }
+
         public Parser Map<TArg, TResult>(Func<TArg, TResult> function)
         {
             return new ActionParser<TResult>(this, (result) =>
