@@ -333,6 +333,16 @@ namespace PetitParser.Test
             Assert.IsFalse(pp.Matches("2a"));
         }
 
+        [TestMethod]
+        public void TestParserSeparatedBy()
+        {
+            var pp = Parser.Digit.SeparatedBy(','.AsParser()).End;
+            CollectionAssert.AreEqual(
+                new char[] { '3', ',', '4', ',', '5' },
+                pp.Parse<object[]>("3,4,5"));
+            Throws<ParseException>(() => pp.Parse("3,4,5,"));
+        }
+
         private void Throws<T>(Action action) where T : Exception
         {
             try

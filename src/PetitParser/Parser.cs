@@ -142,6 +142,24 @@ namespace PetitParser
             get { return Not.Then(Any).Map(elements => elements[1]); }
         }
 
+        public Parser SeparatedBy(Parser parser)
+        {
+            return Then(parser.Then(this).Star)
+                .Map<object, object[], object[]>((first, second) =>
+                {
+                    object[] result = new object[2 * second.Length + 1];
+                    result[0] = first;
+                    int index = 0;
+                    foreach (object[] pair in second)
+                    {
+                        int start = 2 * index++;
+                        result[start + 1] = pair[0];
+                        result[start + 2] = pair[1];
+                    }
+                    return result;
+                });
+        }
+
         public Parser Map<TArg, TResult>(Func<TArg, TResult> function)
         {
             return new ActionParser<TResult>(this, (result) =>
