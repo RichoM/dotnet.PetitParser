@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace PetitParser
 {
-    internal class GreedyRepeatingParser : Parser
+    class GreedyRepeatingParser : Parser
     {
         private int max;
         private Parser parser;

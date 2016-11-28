@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace PetitParser
 {
-    internal class LazyRepeatingParser : Parser
+    class LazyRepeatingParser : Parser
     {
         private Parser parser;
         private int min;

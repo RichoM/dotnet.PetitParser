@@ -4,7 +4,7 @@ using PetitParser.Utils;
 
 namespace PetitParser
 {
-    public class NotParser : Parser
+    class NotParser : Parser
     {
         private Parser parser;
 
