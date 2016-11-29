@@ -19,7 +19,7 @@ namespace PetitParser
             ParserFieldsDo(Define);
         }
 
-        public abstract Parser Start();
+        protected abstract Parser Start();
 
         private void ParserFieldsDo(Action<FieldInfo> action)
         {

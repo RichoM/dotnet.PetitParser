@@ -17,12 +17,12 @@ namespace PetitParser.Test
         Parser parentheses = null;
         Parser number = null;
 
-        public override Parser Start()
+        protected override Parser Start()
         {
             return terms.End;
         }
 
-        public Parser Addition()
+        private Parser Addition()
         {
             return factors.SeparatedBy('+'.AsParser().Or('-'.AsParser()).Trim(Space))
                 .Map(nodes =>
@@ -43,12 +43,12 @@ namespace PetitParser.Test
                 });
         }
 
-        public Parser Factors()
+        private Parser Factors()
         {
             return multiplication.Or(power);
         }
 
-        public Parser Multiplication()
+        private Parser Multiplication()
         {
             return power.SeparatedBy('*'.AsParser().Or('/'.AsParser()).Trim(Space))
                 .Map(nodes =>
@@ -69,7 +69,7 @@ namespace PetitParser.Test
                 });
         }
 
-        public Parser Number()
+        private Parser Number()
         {
             return '-'.AsParser().Optional
                 .Then(Digit.Plus)
@@ -79,7 +79,7 @@ namespace PetitParser.Test
                 .Map<string, double>(value => double.Parse(value));
         }
 
-        public Parser Parentheses()
+        private Parser Parentheses()
         {
             return '('.AsParser().Trim(Space)
                 .Then(terms)
@@ -87,7 +87,7 @@ namespace PetitParser.Test
                 .Map(nodes => nodes[1]);
         }
 
-        public Parser Power()
+        private Parser Power()
         {
             return primary.SeparatedBy('^'.AsParser().Trim(Space))
                 .Map(nodes =>
@@ -104,12 +104,12 @@ namespace PetitParser.Test
                 });
         }
 
-        public Parser Primary()
+        private Parser Primary()
         {
             return number.Or(parentheses);
         }
 
-        public Parser Terms()
+        private Parser Terms()
         {
             return addition.Or(factors);
         }
