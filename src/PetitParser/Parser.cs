@@ -97,6 +97,16 @@ namespace PetitParser
             return new RepeatingParser(this, times, times);
         }
 
+        public Parser Min(int min)
+        {
+            return new RepeatingParser(this, min, int.MaxValue);
+        }
+
+        public Parser Max(int max)
+        {
+            return new RepeatingParser(this, 0, max);
+        }
+
         public Parser StarGreedy(Parser limit)
         {
             return new GreedyRepeatingParser(this, 0, int.MaxValue, limit);
@@ -115,6 +125,26 @@ namespace PetitParser
         public Parser PlusLazy(Parser limit)
         {
             return new LazyRepeatingParser(this, 1, int.MaxValue, limit);
+        }
+
+        public Parser MinGreedy(int min, Parser limit)
+        {
+            return new GreedyRepeatingParser(this, min, int.MaxValue, limit);
+        }
+
+        public Parser MaxGreedy(int max, Parser limit)
+        {
+            return new GreedyRepeatingParser(this, 0, max, limit);
+        }
+
+        public Parser MinLazy(int min, Parser limit)
+        {
+            return new LazyRepeatingParser(this, min, int.MaxValue, limit);
+        }
+
+        public Parser MaxLazy(int max, Parser limit)
+        {
+            return new LazyRepeatingParser(this, 0, max, limit);
         }
 
         public Parser Not

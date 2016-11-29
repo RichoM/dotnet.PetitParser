@@ -128,6 +128,24 @@ namespace PetitParser.Test
         }
 
         [TestMethod]
+        public void TestRepeatingParserMin()
+        {
+            var pp = "foo".AsParser().Flatten.Min(3).End;
+            CollectionAssert.AreEqual(new string[] { "foo", "foo", "foo" }, pp.Parse<object[]>("foofoofoo"));
+            CollectionAssert.AreEqual(new string[] { "foo", "foo", "foo", "foo" }, pp.Parse<object[]>("foofoofoofoo"));
+            Throws<ParseException>(() => pp.Parse("foofoo"));
+        }
+
+        [TestMethod]
+        public void TestRepeatingParserMax()
+        {
+            var pp = "foo".AsParser().Flatten.Max(3).End;
+            CollectionAssert.AreEqual(new string[] { "foo", "foo", "foo" }, pp.Parse<object[]>("foofoofoo"));
+            CollectionAssert.AreEqual(new string[] { "foo", "foo" }, pp.Parse<object[]>("foofoo"));
+            Throws<ParseException>(() => pp.Parse("foofoofoofoo"));
+        }
+
+        [TestMethod]
         public void TestNotParser()
         {
             var pp = 'a'.AsParser().Not;
@@ -350,6 +368,39 @@ namespace PetitParser.Test
             Assert.AreEqual('+', pp.Parse("\t\n\r + \r\n\t"));
             Assert.AreEqual('+', pp.Parse("+"));
             Throws<ParseException>(() => pp.Parse(" . "));
+        }
+
+        [TestMethod]
+        public void TestGreedyRepeatingParserMin()
+        {
+            var pp = Parser.Any.MinGreedy(3, "END".AsParser().CaseInsensitive).Flatten
+                .Then("END".AsParser().CaseInsensitive)
+                .End
+                .Map(nodes => nodes[0]);
+            Assert.AreEqual("abc", pp.Parse("abcEND"));
+            Assert.AreEqual("abcdef", pp.Parse("abcdefEND"));
+            Assert.AreEqual("end", pp.Parse("endEND"));
+            Assert.AreEqual("abcend", pp.Parse("abcendEND"));
+            Assert.AreEqual("ENDabc", pp.Parse("ENDabcEND"));
+            Throws<ParseException>(() => pp.Parse("abc"));
+            Throws<ParseException>(() => pp.Parse("END"));
+            Throws<ParseException>(() => pp.Parse("abend"));
+        }
+
+        [TestMethod]
+        public void TestGreedyRepeatingParserMax()
+        {
+            var pp = Parser.Any.MaxGreedy(3, "END".AsParser().CaseInsensitive).Flatten
+                .Then("END".AsParser().CaseInsensitive)
+                .End
+                .Map(nodes => nodes[0]);
+            Assert.AreEqual("abc", pp.Parse("abcEND"));
+            Assert.AreEqual("a", pp.Parse("aend"));
+            Assert.AreEqual("", pp.Parse("END"));
+            Assert.AreEqual("end", pp.Parse("endEND"));
+            Throws<ParseException>(() => pp.Parse("abcendEND"));
+            Throws<ParseException>(() => pp.Parse("ENDabcEND"));
+            Throws<ParseException>(() => pp.Parse("abc"));
         }
 
         private void Throws<T>(Action action) where T : Exception
