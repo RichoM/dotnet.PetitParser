@@ -8,14 +8,14 @@ namespace PetitParser.Test
 {
     class ArithmeticParser : CompositeParser
     {
-        Parser terms;
-        Parser addition;
-        Parser factors;
-        Parser multiplication;
-        Parser power;
-        Parser primary;
-        Parser parentheses;
-        Parser number;
+        Parser terms = null;
+        Parser addition = null;
+        Parser factors = null;
+        Parser multiplication = null;
+        Parser power = null;
+        Parser primary = null;
+        Parser parentheses = null;
+        Parser number = null;
 
         public override Parser Start()
         {
