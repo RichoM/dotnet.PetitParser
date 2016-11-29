@@ -98,7 +98,7 @@ namespace PetitParser.Test
                     {
                         char operand = (char)nodes[i];
                         double next = (double)nodes[i + 1];
-                        subTotal = Math.Pow(subTotal, next);
+                        subTotal = Math.Pow(next, subTotal);
                     }
                     return subTotal;
                 });
