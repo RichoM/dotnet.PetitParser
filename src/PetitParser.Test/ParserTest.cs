@@ -343,6 +343,15 @@ namespace PetitParser.Test
             Throws<ParseException>(() => pp.Parse("3,4,5,"));
         }
 
+        [TestMethod]
+        public void TestParserTrim()
+        {
+            var pp = '+'.AsParser().Trim(Parser.Space);
+            Assert.AreEqual('+', pp.Parse("\t\n\r + \r\n\t"));
+            Assert.AreEqual('+', pp.Parse("+"));
+            Throws<ParseException>(() => pp.Parse(" . "));
+        }
+
         private void Throws<T>(Action action) where T : Exception
         {
             try

@@ -160,6 +160,11 @@ namespace PetitParser
                 });
         }
 
+        public Parser Trim(Parser trimmer)
+        {
+            return new TrimmingParser(this, trimmer);
+        }
+
         public Parser Map<TArg, TResult>(Func<TArg, TResult> function)
         {
             return new ActionParser<TResult>(this, (result) =>

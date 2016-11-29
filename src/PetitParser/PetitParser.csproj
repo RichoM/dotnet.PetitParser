@@ -43,6 +43,8 @@
     <Compile Include="ActionParser.cs" />
     <Compile Include="AndParser.cs" />
     <Compile Include="ChoiceParser.cs" />
+    <Compile Include="CompositeParser.cs" />
+    <Compile Include="DelegateParser.cs" />
     <Compile Include="EndParser.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FlattenParser.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="SequenceParser.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="TokenParser.cs" />
+    <Compile Include="TrimmingParser.cs" />
     <Compile Include="Utils\Stream.cs" />
     <Compile Include="Utils\StreamExtensions.cs" />
   </ItemGroup>
