@@ -15,11 +15,16 @@ namespace PetitParser
 
         public CompositeParser()
         {
-            ParserFieldsDo(field => field.SetValue(this, new DelegateParser()));
-            ParserFieldsDo(Define);
+            InitializeChildren();
         }
 
         protected abstract Parser Start();
+
+        protected virtual void InitializeChildren()
+        {
+            ParserFieldsDo(field => field.SetValue(this, new DelegateParser()));
+            ParserFieldsDo(Define);
+        }
 
         private void ParserFieldsDo(Action<FieldInfo> action)
         {
