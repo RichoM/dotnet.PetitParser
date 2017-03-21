@@ -174,7 +174,7 @@ namespace PetitParser
 
         public Parser SeparatedBy(Parser parser)
         {
-            return Then(parser.Then(this).Star)
+            return new SequenceParser(new Parser[] { this, parser.Then(this).Star })
                 .Map<object, object[], object[]>((first, second) =>
                 {
                     object[] result = new object[2 * second.Length + 1];

@@ -403,6 +403,33 @@ namespace PetitParser.Test
             Throws<ParseException>(() => pp.Parse("abc"));
         }
 
+        [TestMethod]
+        public void TestParserSeparatedBy2()
+        {
+            var identifier = '['.AsParser()
+                .Then(Parser.Predicate(
+                        chr => chr != '[' && chr != ']',
+                        "Any except square brackets expected")
+                    .Plus.Flatten)
+                .Then(']'.AsParser())
+                .Map<char, string, char, string>((left, body, right) =>
+                {
+                    return body;
+                })
+                .Or(Parser.Word.Or('_'.AsParser()).Plus.Flatten);
+            var ws = Parser.Space;
+            var pp = ws.Star
+                .Then(identifier)
+                .Then(ws.Star)
+                .Then("ASC".AsParser().CaseInsensitive.Or("DESC".AsParser().CaseInsensitive))
+                .Then(ws.Star)
+                .SeparatedBy(','.AsParser());
+
+            Assert.IsTrue(pp.Matches("[id] ASC"));
+            Assert.IsTrue(pp.Matches("\n	[id] ASC, [model] desc"));
+            Assert.IsTrue(pp.Matches("[id]ASC,[model]desc"));
+        }
+
         private void Throws<T>(Action action) where T : Exception
         {
             try
